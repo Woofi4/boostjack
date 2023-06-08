@@ -2,21 +2,24 @@
 
 
 int main(int argc, char* argv[]) {
-	if (argc != 3) {
-		std::cerr << "Usage: boostjack_client <host> <port>" << std::endl;
+	if (argc != 4) {
+		std::cerr << "Usage: boostjack_client <host> <port> <nickname>" << std::endl;
 		return -1;
 	}
 
 	boost::asio::io_context io_context;
 	try {
 		boostjack::client client(io_context);
-		client.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(argv[1]), std::atoi(argv[2])));
+		client.connect(boost::asio::ip::tcp::endpoint(boost::asio::ip::address::from_string(argv[1]), std::atoi(argv[2])), argv[3]);
 
 		std::string input;
 		while (std::cin >> input) {
 			if (input == "/q") { break; }
-
-			client.send(input.c_str());
+			
+			if (input == "ready") {
+				char* request = new char[1] { 1 };
+				client.send(request);
+			}
 		}
 
 		client.disconnect();
