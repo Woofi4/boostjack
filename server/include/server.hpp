@@ -14,8 +14,7 @@ class server {
 
 	void accept() {
 		_acceptor.async_accept([this](const boost::system::error_code& ec, boost::asio::ip::tcp::socket socket) {
-			if (!ec)
-			{
+			if (!ec && !_room.is_full()) {
 				char* nickname = new char[boostjack::max_nickname_length + 1] { };
 				try {
 					socket.read_some(boost::asio::buffer(nickname, boostjack::max_nickname_length));

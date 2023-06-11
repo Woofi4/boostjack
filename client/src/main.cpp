@@ -20,6 +20,18 @@ int main(int argc, char* argv[]) {
 				char* request = new char[1] { 1 };
 				client.send(request);
 			}
+			else if (input == "hit") {
+				char* request = new char[1] { 2 };
+				client.send(request);
+			}
+			else if (input == "stand") {
+				char* request = new char[1] { 3 };
+				client.send(request);
+			}
+			// else if (input == "surrender") {
+			// 	char* request = new char[1] { 4 };
+			// 	client.send(request);
+			// }
 		}
 
 		client.disconnect();
