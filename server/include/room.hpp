@@ -143,8 +143,34 @@ public:
 			gm.surrender();
 
 			if (!is_active()) {
+				std::vector<std::shared_ptr<player>> winners;
 				for (auto p : _players) {
-					p->send("\0Tie");
+					if (p->is_active) {
+						if (winners.size() == 0)
+						{ winners.push_back(p); }
+						else if (winners[0]->score == p->score) {
+							winners.push_back(p);
+						}
+						else if (winners[0]->score < p->score) {
+							winners.clear();
+							winners.push_back(p);
+						}
+					}
+				}
+
+				if (winners.size() == 0) {
+					for (auto p : _players) {
+						p->send("\0Tie");
+					}
+				}
+				else {
+					for (auto p : winners) {
+						p->send("\0Win");
+						send_to_other(p, "win");
+					}
+				}
+
+				for (auto p : _players) {
 					p->is_ready = false;
 					p->score = 0;
 				}

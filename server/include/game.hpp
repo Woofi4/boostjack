@@ -17,11 +17,15 @@ class game {
 	std::deque<card> deck;
 	std::list<std::shared_ptr<player>> _players_order;
 	std::list<std::shared_ptr<player>>::iterator _active_player;
-	std::random_device rd { };
-	std::default_random_engine re { rd() };
+	std::random_device rd;
 	
 public:
 	void start(std::set<std::shared_ptr<player>> players) {
+		std::default_random_engine re(rd());
+		std::mt19937 rng(rd());
+		std::uniform_int_distribution<std::mt19937::result_type> dist(0, players.size() - 1);
+
+
 		for (auto p : players) {
 			_players_order.push_back(p);
 			p->is_active = true;
@@ -29,7 +33,7 @@ public:
 
 		deck = deck36;
 		std::shuffle(deck.begin(), deck.end(), re);
-		_active_player = _players_order.begin();
+		_active_player = std::next(_players_order.begin(), dist(rng));
 	}
 
 	void next() {
