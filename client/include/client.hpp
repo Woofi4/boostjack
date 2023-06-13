@@ -1,3 +1,6 @@
+#ifndef CLIENT_HPP
+#define CLIENT_HPP
+
 #include "boost/asio.hpp"
 #include <iostream>
 #include <initializer_list>
@@ -34,9 +37,8 @@ class client {
 				{ std::cout << "[Game start]" << std::endl; }
 				else if (request[0] == 2) {
 					std::cout << "You got: ";
-					for (unsigned i = 0; i < request[1]; ++i) {
-						std::cout << (int) (request[i + 2]) << " ";
-					}
+					for (unsigned i = 0; i < request[1]; ++i)
+					{ std::cout << (int) (request[i + 2]) << " "; }
 					std::cout << std::endl;
 				}
 				
@@ -87,3 +89,5 @@ public:
 	}
 };
 }
+
+#endif

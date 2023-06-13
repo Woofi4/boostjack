@@ -84,10 +84,7 @@ public:
 				p->send("\0You win");
 				send_to_other(p, "win");
 
-				for (auto pl : _players) {
-					pl->is_ready = false;
-					pl->score = 0;
-				}
+				stop();
 			}
 			else if (p->score > 21) {
 				p->send("\0You lose");
@@ -103,9 +100,8 @@ public:
 				if (!is_active()) {
 					for (auto p : _players) {
 						p->send("\0Tie");
-						p->is_ready = false;
-						p->score = 0;
 					}
+					stop();
 				}
 			}
 		}
@@ -132,10 +128,7 @@ public:
 			send_to_other(*gm._active_player, "win");
 
 			gm._players_order.clear();
-			for (auto p : _players) {
-				p->is_ready = false;
-				p->score = 0;
-			}
+			stop();
 		}
 		else if ((*gm._active_player)->score > 21) {
 			(*gm._active_player)->send("\0You lose");
@@ -170,10 +163,7 @@ public:
 					}
 				}
 
-				for (auto p : _players) {
-					p->is_ready = false;
-					p->score = 0;
-				}
+				stop();
 			}
 		}
 
@@ -208,10 +198,7 @@ public:
 				send_to_other(p, "win");
 			}
 
-			for (auto p : _players) {
-				p->is_ready = false;
-				p->score = 0;
-			}
+			stop();
 		}
 		else
 		{ notify(); }
@@ -225,6 +212,14 @@ public:
 	// 	if (!is_active()) 
 	// 	{ notify(); }
 	// }
+
+	void stop() {
+		for (auto p : _players) {
+			p->is_ready = false;
+			p->score = 0;
+			p->send("\0Get ready");
+		}
+	}
 
 	void notify()
 	{ (*gm._active_player)->send("\0Your turn"); }
