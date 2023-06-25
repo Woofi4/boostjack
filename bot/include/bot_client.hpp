@@ -31,7 +31,17 @@ class bot_client {
 		char* request = new char[max_data_size + 1] { };
 		_socket.async_read_some(boost::asio::buffer(request, max_data_size), [this, request](const boost::system::error_code& ec, std::size_t) {
 			if (!ec) {
-				if (request[0] == 0) {
+				if (request[0] == 1)
+				{ std::cout << "[Game start]" << std::endl; }
+				else if (request[0] == 2) {
+					std::cout << "You got: ";
+					for (unsigned i = 0; i < request[1]; ++i) {
+						std::cout << (int) (request[i + 2]) << " ";
+						bot.add_score(request[i + 2]);	
+					}
+					std::cout << std::endl;
+				}
+				else if (request[0] == 0) {
 					std::cout << &request[1] << std::endl;
 					if (strcmp(&request[1], "Your turn") == 0) {
 						const char* action = bot.handle();
@@ -42,22 +52,10 @@ class bot_client {
 							send(new const char[1] { 3 });
 						}
 					}
-					else if (strcmp(&request[1], "Get ready") == 0) {
-						bot.reset();
-						std::cout << "ready" << std::endl;
-						send(new const char[1] { 1 });
-					}
+					else if (strcmp(&request[1], "Get ready") == 0)
+					{ bot.reset(); }
 				}
-				else if (request[0] == 1)
-				{ std::cout << "[Game start]" << std::endl; }
-				else if (request[0] == 2) {
-					std::cout << "You got: ";
-					for (unsigned i = 0; i < request[1]; ++i) {
-						std::cout << (int) (request[i + 2]) << " ";
-						bot.add_score(request[i + 2]);	
-					}
-					std::cout << std::endl;
-				}
+
 				
 				delete[] request;
 				listen();
@@ -80,7 +78,7 @@ public:
 				std::cout << "[Connected]" << std::endl;
 
 				_socket.send(boost::asio::buffer(nickname, std::max((size_t) boostjack::max_nickname_length, std::strlen(nickname))));
-				_socket.send(boost::asio::buffer(new const char[1] { 1 }, 1));
+				//_socket.send(boost::asio::buffer(new const char[1] { 1 }, 1));
 				listen();
 			}
 			else

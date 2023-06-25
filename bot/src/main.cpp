@@ -17,6 +17,11 @@ int main(int argc, char* argv[]) {
 		std::string input;
 		while (std::cin >> input) {
 			if (input == "/q") { break; }
+
+			if (input == "ready") {
+				char* request = new char[1] { 1 };
+				client.send(request);
+			}
 		}
 
 		client.disconnect();
